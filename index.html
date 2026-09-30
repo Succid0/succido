@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f4f2e9">
+	<meta name="description" content="A calmer, clearer study guide system. Turn class notes into a plan that works for you.">
+	<title>Margin — Study with a little more clarity</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			color-scheme: light;
+			--paper: #f4f2e9;
+			--ink: #20251f;
+			--muted: #70766c;
+			--green: #d0f278;
+			--deep-green: #3d5940;
+			--line: #dedfd5;
+			--serif: "Newsreader", Georgia, serif;
+			--sans: "DM Sans", sans-serif;
+		}
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+		a { color: inherit; text-decoration: none; }
+		.wrap { width: min(1120px, calc(100% - 56px)); margin-inline: auto; }
+		.topbar { height: 78px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+		.brand { display: inline-flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; }
+		.brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px 9px 9px 3px; background: var(--green); font: 600 18px var(--serif); }
+		.nav { display: flex; align-items: center; gap: 34px; color: #5c6259; font-size: 13px; }
+		.nav a:not(.nav-button):hover, .quiet-link:hover { color: var(--deep-green); }
+		.nav-button, .primary-button { display: inline-flex; min-height: 45px; align-items: center; justify-content: center; gap: 12px; padding: 0 19px; border-radius: 4px; background: var(--ink); color: white; font-size: 13px; font-weight: 600; transition: transform .2s, background .2s; }
+		.nav-button:hover, .primary-button:hover { transform: translateY(-2px); background: #3e483c; }
+		.arrow { font-size: 18px; line-height: 1; }
+		.hero { min-height: 580px; display: grid; grid-template-columns: 1.03fr .97fr; align-items: center; gap: 54px; padding-block: 65px; }
+		.eyebrow { display: flex; align-items: center; gap: 9px; margin: 0 0 22px; color: var(--deep-green); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+		.dot { width: 7px; height: 7px; border-radius: 50%; background: #8ba950; }
+		h1 { margin: 0; font: 500 clamp(58px, 7vw, 82px)/.96 var(--serif); }
+		h1 em { color: #658148; font-weight: 400; }
+		.intro { max-width: 420px; margin: 23px 0 28px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+		.hero-actions { display: flex; align-items: center; gap: 22px; }
+		.quiet-link { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+		.note { display: flex; align-items: center; gap: 10px; margin-top: 27px; color: var(--muted); font-size: 11px; }
+		.avatars { display: flex; padding-left: 3px; }
+		.avatars i { display: grid; width: 22px; height: 22px; margin-left: -3px; place-items: center; border: 2px solid var(--paper); border-radius: 50%; background: #d8b6a0; color: #3d3930; font-size: 8px; font-style: normal; font-weight: 700; }
+		.avatars i:nth-child(2) { background: #bdc9ad; }
+		.avatars i:nth-child(3) { background: #ddcf9c; }
+		.visual { position: relative; min-height: 425px; animation: arrive .7s .12s both; }
+		.photo { position: absolute; inset: 0 7px 14px 35px; overflow: hidden; border-radius: 3px 68px 3px 3px; background: #d7d0bd; }
+		.photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+		.photo::after { position: absolute; inset: 48% 0 0; content: ""; background: linear-gradient(transparent, rgb(20 25 18 / 48%)); }
+		.photo-caption { position: absolute; z-index: 1; bottom: 36px; left: 59px; color: white; font: 400 23px/1.1 var(--serif); }
+		.photo-caption small { display: block; margin-top: 9px; font: 500 9px var(--sans); letter-spacing: .5px; }
+		.plan-card { position: absolute; z-index: 2; top: 38px; left: 0; width: 188px; padding: 16px; border: 1px solid rgb(32 37 31 / 7%); border-radius: 4px; background: #fffefa; box-shadow: 0 13px 36px rgb(40 43 34 / 13%); }
+		.card-heading { display: flex; justify-content: space-between; color: var(--muted); font-size: 9px; }
+		.card-heading strong { color: var(--ink); font-size: 11px; }
+		.progress { display: grid; width: 100px; height: 100px; margin: 16px auto 13px; place-items: center; border-radius: 50%; background: conic-gradient(#87a956 0 72%, #ebeee5 72%); }
+		.progress-inner { display: grid; width: 79px; height: 79px; place-content: center; border-radius: 50%; background: #fffefa; text-align: center; font: 500 24px var(--serif); }
+		.progress-inner small { margin-top: 2px; color: var(--muted); font: 600 7px var(--sans); }
+		.course { display: flex; align-items: center; gap: 7px; padding-top: 10px; border-top: 1px solid #ecece5; font-size: 8px; }
+		.course i { width: 7px; height: 7px; border-radius: 2px; background: #c3e66e; }
+		.course span { margin-left: auto; color: var(--muted); }
+		.streak { position: absolute; z-index: 2; right: -8px; bottom: 0; display: flex; align-items: center; gap: 10px; padding: 12px 15px; border-radius: 4px; background: var(--green); box-shadow: 0 8px 24px rgb(38 49 27 / 12%); }
+		.streak-icon { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 50%; background: rgb(32 37 31 / 9%); font-size: 15px; }
+		.streak strong, .streak small { display: block; }
+		.streak strong { font-size: 11px; }
+		.streak small { margin-top: 3px; color: #52623a; font-size: 9px; }
+		.ticker { border-block: 1px solid var(--line); }
+		.ticker-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+		.ticker-label { max-width: 145px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+		.ticker-item { color: #74796f; font: 500 14px var(--serif); }
+		.ticker-item:nth-child(3) { font: 700 12px var(--sans); letter-spacing: .6px; }
+		.features { padding-block: 100px; }
+		.section-head { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 38px; }
+		h2 { margin: 0; font: 500 47px/1.04 var(--serif); }
+		.section-head > p { max-width: 330px; margin: 0 0 4px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+		.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+		.feature { padding: 24px 24px 0 0; }
+		.feature + .feature { padding-left: 24px; border-left: 1px solid var(--line); }
+		.feature-number { color: #8a8f83; font-size: 10px; }
+		.feature-icon { display: grid; width: 41px; height: 41px; margin: 22px 0 17px; place-items: center; border-radius: 50%; background: #e5eadc; color: var(--deep-green); font: 500 18px var(--serif); }
+		.feature h3 { margin: 0 0 9px; font-size: 14px; }
+		.feature p { max-width: 280px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+		.method { padding-block: 72px; background: #e8ecdf; }
+		.method-inner { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 90px; }
+		.method-copy .eyebrow { margin-bottom: 16px; }
+		.method-copy h2 { max-width: 435px; }
+		.method-copy > p { max-width: 370px; color: #687064; font-size: 12px; line-height: 1.8; }
+		.steps { border-top: 1px solid #cfd5c5; }
+		.step { display: grid; grid-template-columns: 35px 1fr; gap: 13px; padding: 17px 0; border-bottom: 1px solid #cfd5c5; }
+		.step-number { color: #73855e; font: 500 16px var(--serif); }
+		.step h3 { margin: 1px 0 5px; font-size: 12px; }
+		.step p { margin: 0; color: #6d7368; font-size: 10px; line-height: 1.7; }
+		.closing { padding: 85px 0; text-align: center; }
+		.closing .eyebrow { justify-content: center; }
+		.closing h2 { max-width: 600px; margin-inline: auto; }
+		.closing > .wrap > p:not(.eyebrow) { margin: 15px auto 24px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+		.closing .primary-button { min-height: 43px; }
+		footer { border-top: 1px solid var(--line); }
+		.footer-inner { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; color: #7d8178; font-size: 10px; }
+		.footer-links { display: flex; gap: 22px; }
+		.footer-links a:hover { color: var(--ink); }
+		@keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+		@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+		@media (max-width: 780px) {
+			.wrap { width: min(100% - 40px, 620px); }
+			.topbar { height: 68px; }
+			.nav { gap: 16px; }
+			.nav > a:not(.nav-button) { display: none; }
+			.nav-button { min-height: 39px; padding-inline: 13px; }
+			.hero { grid-template-columns: 1fr; gap: 33px; padding-block: 55px 48px; }
+			h1 { font-size: clamp(58px, 11vw, 76px); }
+			.visual { width: min(100%, 540px); min-height: 375px; margin-inline: auto; }
+			.ticker-inner { flex-wrap: wrap; justify-content: center; padding-block: 18px; }
+			.ticker-label { flex-basis: 100%; max-width: none; text-align: center; }
+			.ticker-item { margin-inline: 9px; }
+			.features { padding-block: 72px; }
+			.section-head { align-items: start; flex-direction: column; gap: 13px; }
+			h2 { font-size: 41px; }
+			.feature-grid { grid-template-columns: 1fr; }
+			.feature, .feature + .feature { display: grid; grid-template-columns: 30px 42px 1fr; gap: 0 12px; align-items: center; padding: 16px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+			.feature-number { grid-row: 1 / span 2; align-self: start; padding-top: 6px; }
+			.feature-icon { grid-row: 1 / span 2; margin: 0; }
+			.feature h3 { align-self: end; margin: 0 0 4px; }
+			.feature p { grid-column: 3; }
+			.method { padding-block: 58px; }
+			.method-inner { grid-template-columns: 1fr; gap: 27px; }
+			.closing { padding-block: 67px; }
+		}
+		@media (max-width: 460px) {
+			.wrap { width: calc(100% - 36px); }
+			.hero { padding-top: 46px; }
+			h1 { font-size: 55px; }
+			.intro { font-size: 13px; }
+			.hero-actions { align-items: flex-start; flex-direction: column; gap: 15px; }
+			.visual { min-height: 310px; }
+			.photo { inset: 0 0 9px 27px; border-top-right-radius: 53px; }
+			.plan-card { top: 27px; width: 164px; padding: 13px; }
+			.progress { width: 86px; height: 86px; margin: 12px auto; }
+			.progress-inner { width: 68px; height: 68px; font-size: 21px; }
+			.photo-caption { bottom: 27px; left: 43px; font-size: 20px; }
+			.streak { right: -4px; padding: 9px 11px; }
+			.ticker-item { font-size: 12px; }
+			h2, .method-copy h2 { font-size: 38px; }
+			.footer-inner { align-items: flex-start; flex-direction: column; justify-content: center; padding-block: 16px; }
+		}
+	</style>
+</head>
+<body>
+	<header class="wrap topbar">
+		<a class="brand" href="#home" aria-label="Margin home"><span class="brand-mark">m.</span> margin</a>
+		<nav class="nav" aria-label="Main navigation">
+			<a href="#system">The system</a>
+			<a href="#how-it-works">How it works</a>
+			<a class="nav-button" href="#get-started">Find your flow <span class="arrow" aria-hidden="true">↗</span></a>
+		</nav>
+	</header>
+
+	<main>
+		<section class="wrap hero" id="home">
+			<div>
+				<p class="eyebrow"><span class="dot"></span> A little more clarity. A lot less cramming.</p>
+				<h1>Study like<br>you <em>mean it.</em></h1>
+				<p class="intro">Meet the study guide system that turns class notes into a clear plan, useful guides, and the kind of progress you can actually feel.</p>
+				<div class="hero-actions">
+					<a class="primary-button" href="#get-started">Find your starting point <span class="arrow" aria-hidden="true">↗</span></a>
+					<a class="quiet-link" href="#system">Explore the system <span aria-hidden="true">↓</span></a>
+				</div>
+				<div class="note"><span class="avatars" aria-hidden="true"><i>J</i><i>A</i><i>M</i></span> Built for real students and real schedules.</div>
+			</div>
+			<div class="visual" role="img" aria-label="A calm study session with a weekly progress guide">
+				<div class="photo"><img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=1150&amp;q=85" alt="Student writing notes beside a laptop" fetchpriority="high"></div>
+				<div class="photo-caption">A better kind<br>of study session.<small>YOUR WEEK, WITH A LITTLE MORE ROOM TO BREATHE</small></div>
+				<aside class="plan-card" aria-label="Example weekly study plan">
+					<div class="card-heading"><strong>This week's plan</strong><span>•••</span></div>
+					<div class="progress"><div class="progress-inner">72%<small>FEELING READY</small></div></div>
+					<div class="course"><i></i><strong>Biology · Unit 04</strong><span>3 / 4</span></div>
+				</aside>
+				<aside class="streak"><span class="streak-icon" aria-hidden="true">✳</span><span><strong>You're finding a rhythm</strong><small>One focused session at a time</small></span></aside>
+			</div>
+		</section>
+
+		<section class="ticker" aria-label="Study guide highlights">
+			<div class="wrap ticker-inner">
+				<span class="ticker-label">A fresh start for your next study session</span>
+				<span class="ticker-item">Clearer notes</span>
+				<span class="ticker-item">A plan that fits</span>
+				<span class="ticker-item">Steady progress</span>
+			</div>
+		</section>
+
+		<section class="wrap features" id="system">
+			<div class="section-head">
+				<div><p class="eyebrow"><span class="dot"></span> Your brain, with a game plan</p><h2>Less staring at notes.<br>More getting it.</h2></div>
+				<p>Everything you need to make the next right move, gathered into one thoughtful, flexible system.</p>
+			</div>
+			<div class="feature-grid">
+				<article class="feature"><span class="feature-number">01</span><span class="feature-icon" aria-hidden="true">↗</span><div><h3>A guide that gets to the point</h3><p>Shape class notes into bite-size guides, organized around what you actually need to know.</p></div></article>
+				<article class="feature"><span class="feature-number">02</span><span class="feature-icon" aria-hidden="true">◷</span><div><h3>A plan that fits real life</h3><p>Break big deadlines into doable study sessions. Make room for the rest of your life, too.</p></div></article>
+				<article class="feature"><span class="feature-number">03</span><span class="feature-icon" aria-hidden="true">✳</span><div><h3>Progress you can actually see</h3><p>Notice what feels solid and what needs another pass, without the all-nighter math.</p></div></article>
+			</div>
+		</section>
+
+		<section class="method" id="how-it-works">
+			<div class="wrap method-inner">
+				<div class="method-copy"><p class="eyebrow"><span class="dot"></span> Small steps add up</p><h2>From “where do I start?” to “I've got this.”</h2><p>A simple, flexible rhythm for doing the work without letting the work take over.</p></div>
+				<div class="steps">
+					<article class="step"><span class="step-number">01</span><div><h3>Bring what you're learning</h3><p>Start with a class, a topic, or the notes already living in your bag.</p></div></article>
+					<article class="step"><span class="step-number">02</span><div><h3>Get your bearings</h3><p>See the key ideas, the next sessions, and where to spend your energy.</p></div></article>
+					<article class="step"><span class="step-number">03</span><div><h3>Build a little momentum</h3><p>Study in focused bursts, check in with yourself, and adjust as you go.</p></div></article>
+				</div>
+			</div>
+		</section>
+
+		<section class="closing" id="get-started">
+			<div class="wrap">
+				<p class="eyebrow"><span class="dot"></span> Your next chapter starts here</p>
+				<h2>Make room for the<br>“I actually know this” feeling.</h2>
+				<p>Start with one class. Find your rhythm from there.</p>
+				<a class="primary-button" href="#system">Explore the study system <span class="arrow" aria-hidden="true">↓</span></a>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<div class="wrap footer-inner">
+			<a class="brand" href="#home"><span class="brand-mark">m.</span> margin</a>
+			<span>Make a little progress. Then a little more. © 2026 Margin</span>
+			<nav class="footer-links" aria-label="Footer navigation"><a href="#system">The system</a><a href="mailto:hello@margin.study">Say hello</a></nav>
+		</div>
+	</footer>
+</body>
+</html>
